@@ -1,0 +1,52 @@
+[root]
+bronze = "@format {env[ROOT_DATA_DIR]}/storage/bronze"
+silver = "@format {env[ROOT_DATA_DIR]}/storage/silver"
+gold = "@format {env[ROOT_DATA_DIR]}/storage/gold"
+
+[ingestion]
+reader = "CsvReader"
+writer = "ParquetWriter"
+
+    [ingestion.book]
+    reader = "@format {this.ingestion.reader}"
+    writer = "@format {this.ingestion.writer}"
+
+    [ingestion.book.input]
+    path = "@format {env[ROOT_DATA_DIR]}/ingest/books.csv"
+
+    [ingestion.book.output]
+    path = "@format {this.root.bronze}/books"
+    partition_by = ["ingestion_date"]
+
+    [ingestion.checkout]
+    reader = "@format {this.ingestion.reader}"
+    writer = "@format {this.ingestion.writer}"
+
+    [ingestion.checkout.input]
+    path = "@format {env[ROOT_DATA_DIR]}/ingest/checkouts.csv"
+
+    [ingestion.checkout.output]
+    path = "@format {this.root.bronze}/checkouts"
+    partition_by = ["ingestion_date"]
+
+    [ingestion.customer]
+    reader = "@format {this.ingestion.reader}"
+    writer = "@format {this.ingestion.writer}"
+
+    [ingestion.customer.input]
+    path = "@format {env[ROOT_DATA_DIR]}/ingest/customers.csv"
+
+    [ingestion.customer.output]
+    path = "@format {this.root.bronze}/customers"
+    partition_by = ["ingestion_date"]
+
+    [ingestion.library]
+    reader = "@format {this.ingestion.reader}"
+    writer = "@format {this.ingestion.writer}"
+
+    [ingestion.library.input]
+    path = "@format {env[ROOT_DATA_DIR]}/ingest/libraries.csv"
+
+    [ingestion.library.output]
+    path = "@format {this.root.bronze}/libraries"
+    partition_by = ["ingestion_date"]
