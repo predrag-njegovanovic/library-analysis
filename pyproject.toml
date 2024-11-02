@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "library-analysis"
+version = "0.0.1"
+description = "Analyzing library customer behaviour"
+authors = ["Predrag Njegovanovic <djaps94@gmail.com>"]
+readme = "README.md"
+
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.group.dev.dependencies]
+isort = "^5.13.2"
+black = "^24.10.0"
+pylint = "^3.3.1"
+mypy = "^1.13.0"
+flake8 = "^7.1.1"
+pyupgrade = "^3.19.0"
+perflint = "^0.8.1"
+autoflake = "^2.3.1"
+
+[tool.isort]
+profile = "black"
+
+[tool.autoflake]
+check = true
+remove-all-unused-imports = true
+in-place = true
+
+[build.system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonary.api"
