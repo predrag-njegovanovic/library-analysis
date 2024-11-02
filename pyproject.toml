@@ -31,6 +31,9 @@ check = true
 remove-all-unused-imports = true
 in-place = true
 
+[tool.poetry.scripts]
+latool = "src.main:main"
+
 [build.system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonary.api"

@@ -3,7 +3,7 @@ from pathlib import Path
 
 import click
 
-from src.command.utils import DEFAULT_CONFIG_PATH, load_app
+from src.command.utils import DEFAULT_CONFIG_PATH, load_app, set_root_data_dir
 from src.common import Config
 
 logger = logging.getLogger(__name__)
@@ -14,17 +14,29 @@ logger = logging.getLogger(__name__)
     "--config-path",
     "-p",
     required=True,
-    type=click.Path,
+    type=click.types.Path(),
     default=DEFAULT_CONFIG_PATH,
     help="Path to configuration file.",
 )
 def ingest(config_path: Path) -> None:
+    logger.info("Starting ingestion..")
+    logger.info("Setting data dir environment variable.")
+    set_root_data_dir()
+
     config = Config.load(str(config_path))
 
-    ingest_book_app = load_app(config, "ingest.books", "ingest.IngestBooksApp")
-    ingest_customer_app = load_app(config, "ingest.customer", "ingest.CustomerApp")
-    ingest_checkout_app = load_app(config, "ingest.checkout", "ingest.CheckoutApp")
-    ingest_library_app = load_app(config, "ingest.library", "ingest.LibraryApp")
+    ingest_book_app = load_app(
+        config, "ingestion.book", "src.ingestion.IngestionBookApp"
+    )
+    ingest_customer_app = load_app(
+        config, "ingestion.customer", "src.ingestion.IngestionCustomerApp"
+    )
+    ingest_checkout_app = load_app(
+        config, "ingestion.checkout", "src.ingestion.IngestionCheckoutApp"
+    )
+    ingest_library_app = load_app(
+        config, "ingestion.library", "src.ingestion.IngestionLibraryApp"
+    )
 
     logger.info("Running Book data ingestion...")
     ingest_book_app.run()
