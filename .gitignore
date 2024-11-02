@@ -168,3 +168,8 @@ cython_debug/
 
 # Data
 /data/ingest/*.csv
+
+# Medallion architecture
+/data/storage/bronze/*
+/data/storage/silver/*
+/data/storage/gold/*
