@@ -4,7 +4,7 @@ import typing as t
 import click
 from click import Command
 
-from src.command import ingest
+from src.command import ingest, process
 
 logger = logging.getLogger(__name__)
 
@@ -76,11 +76,6 @@ def main():
 
 
 @click.command()
-def process_data() -> None:
-    pass
-
-
-@click.command()
 def create_dataset() -> None:
     # TODO: Create dataset in the gold layer
     pass
@@ -93,7 +88,7 @@ def predict() -> None:
 
 
 main.add_command(ingest, mutually_exclusive=True)
-main.add_command(process_data, mutually_exclusive=True)
+main.add_command(process, mutually_exclusive=True)
 main.add_command(create_dataset, mutually_exclusive=True)
 main.add_command(predict, mutually_exclusive=True)
 

@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 from importlib import import_module
 from os import environ
 from pathlib import Path
+from typing import Any
 
 from src.common import App, Config, init_reader, init_writer, load_config_module
 
@@ -28,17 +31,25 @@ def application_name(full_app_name: str) -> tuple[str, str]:
     return names[0], names[1]
 
 
-def load_app(config: Config, config_module: str, full_app_name: str) -> App:
+def load_app(
+    config: Config,
+    config_module: str,
+    full_app_name: str,
+    arguments: dict[str, Any] | None = None,
+) -> App:
     module_name, app_name = application_name(full_app_name)
     config_module = load_config_module(config, config_module)
     reader = init_reader(config_module)
     writer = init_writer(config_module)
 
-    return getattr(import_module(module_name), app_name)(config_module, reader, writer)
+    return getattr(import_module(module_name), app_name)(
+        config_module, reader, writer, arguments
+    )
 
 
 def set_root_data_dir() -> None:
     root_dir = Path(__file__).absolute().parent.parent.parent
     data_dir = root_dir / "data"
 
+    environ["ROOT_DATA_DIR"] = str(data_dir)
     environ["ROOT_DATA_DIR"] = str(data_dir)
