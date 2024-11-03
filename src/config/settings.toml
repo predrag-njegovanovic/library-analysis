@@ -55,6 +55,17 @@ writer = "ParquetWriter"
 reader = "ParquetReader"
 writer = "ParquetWriter"
 
+    [transformation.book]
+    reader = "@format {this.transformation.reader}"
+    writer = "@format {this.transformation.writer}"
+
+    [transformation.book.input]
+    path = "@format {this.root.bronze}/books"
+
+    [transformation.book.output]
+    path = "@format {this.root.silver}/books.parquet"
+    partition_by = []
+
     [transformation.customer]
     reader = "@format {this.transformation.reader}"
     writer = "@format {this.transformation.writer}"

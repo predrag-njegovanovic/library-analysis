@@ -62,7 +62,7 @@ class TransformationCustomerApp(TransformationApp):
             "name": pl.String,
             "street_address": pl.String,
             "city": pl.String,
-            "zipcode": pl.Int8,
+            "zipcode": pl.Int32,
             "birth_date": pl.Date,
             "gender": pl.String,
             "education": pl.String,

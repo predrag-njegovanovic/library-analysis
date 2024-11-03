@@ -43,6 +43,13 @@ def process(
 
     config = Config.load(str(config_path))
 
+    transform_book_app = load_app(
+        config,
+        "transformation.book",
+        "src.transformation.TransformationBookApp",
+        {"start_date": start_date, "end_date": end_date},
+    )
+
     transform_customer_app = load_app(
         config,
         "transformation.customer",
@@ -63,11 +70,13 @@ def process(
         "src.transformation.TransformationLibraryApp",
         {"start_date": start_date, "end_date": end_date},
     )
+    logger.info("Running Book data processing...")
+    transform_book_app.run()
 
-    logger.info("Running Customer data processing")
+    logger.info("Running Customer data processing...")
     transform_customer_app.run()
 
-    logger.info("Running Checkout data processing")
+    logger.info("Running Checkout data processing...")
     transform_checkout_app.run()
 
     logger.info("Running Library data processing...")
