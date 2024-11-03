@@ -43,6 +43,13 @@ def process(
 
     config = Config.load(str(config_path))
 
+    transform_checkout_app = load_app(
+        config,
+        "transformation.checkout",
+        "src.transformation.TransformationCheckoutApp",
+        {"start_date": start_date, "end_date": end_date},
+    )
+
     transform_library_app = load_app(
         config,
         "transformation.library",
@@ -50,7 +57,10 @@ def process(
         {"start_date": start_date, "end_date": end_date},
     )
 
-    logger.info("Running Library data ingestion...")
+    logger.info("Running Checkout data processing")
+    transform_checkout_app.run()
+
+    logger.info("Running Library data processing...")
     transform_library_app.run()
 
     logger.info("Finished data processing.")
