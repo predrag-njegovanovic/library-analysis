@@ -43,8 +43,8 @@ class TransformationCheckoutApp(TransformationApp):
         )
 
         # clean date values
-        data = self._clean_dates(data, "date_checkout")
-        data = self._clean_dates(data, "date_returned")
+        data = self.clean_dates(data, "date_checkout")
+        data = self.clean_dates(data, "date_returned")
 
         data = data.drop(pl.col("ingestion_date"))
 
@@ -62,12 +62,3 @@ class TransformationCheckoutApp(TransformationApp):
         data = data.cast(dtypes=checkout_schema)
 
         return data
-
-    def _clean_dates(self, data: LazyFrame, column_name: str) -> LazyFrame:
-        return data.with_columns(
-            pl.col(column_name)
-            .str.strip_chars()
-            .str.replace_all("[^0-9 -]", "")
-            .str.to_date(format="%Y-%m-%d", strict=False)
-            .alias(column_name)
-        )

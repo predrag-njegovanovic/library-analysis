@@ -11,7 +11,7 @@ from src.transformation.common import TransformationApp
 logger = logging.getLogger(__name__)
 
 
-class TransformationLibraryApp(TransformationApp):
+class TransformationCustomerApp(TransformationApp):
     def run(self) -> None:
         if self.arguments:
             start_date = self.arguments.get("start_date")
@@ -21,7 +21,7 @@ class TransformationLibraryApp(TransformationApp):
             start_date = datetime.strftime(start_date, "%Y-%m-%d")
             end_date = datetime.strftime(end_date, "%Y-%m-%d")
 
-        logger.info("Reading library data from the bronze layer.")
+        logger.info("Reading customer data from the bronze layer.")
         data = self.read(self.config.input)
 
         if start_date and end_date:
@@ -31,7 +31,7 @@ class TransformationLibraryApp(TransformationApp):
         data = self.transform(data)
         data = self.set_schema(data)
 
-        logger.info(f"Writing library data to path: '{self.config.output.path}'")
+        logger.info(f"Writing customer data to path: '{self.config.output.path}'")
 
         data_to_write = data.collect()
         self.write(data_to_write, self.config.output)
@@ -44,8 +44,12 @@ class TransformationLibraryApp(TransformationApp):
         data = self.clean_and_titlecase(data, "name")
         data = self.clean_and_titlecase(data, "street_address")
         data = self.titlecase(data, "city")
-        data = self.uppercase(data, "region")
-        data = self._clean_postal_code(data)
+        data = self.uppercase(data, "state")
+        data = self._clean_zipcode(data)
+        data = self.clean_dates(data, "birth_date")
+        data = self._clean_gender(data)
+        data = self.clean_and_titlecase(data, "education")
+        data = self.clean_and_titlecase(data, "occupation")
 
         # drop ingestion column
         data = data.drop(pl.col("ingestion_date"))
@@ -53,20 +57,33 @@ class TransformationLibraryApp(TransformationApp):
         return data
 
     def set_schema(self, data: LazyFrame) -> LazyFrame:
-        library_schema = {
+        customer_schema = {
             "id": pl.String,
             "name": pl.String,
             "street_address": pl.String,
             "city": pl.String,
-            "region": pl.String,
-            "postal_code": pl.String,
+            "zipcode": pl.Int8,
+            "birth_date": pl.Date,
+            "gender": pl.String,
+            "education": pl.String,
+            "occupation": pl.String,
         }
 
-        data = data.cast(dtypes=library_schema)
+        data = data.cast(dtypes=customer_schema)
 
         return data
 
-    def _clean_postal_code(self, data: LazyFrame) -> LazyFrame:
+    def _clean_zipcode(self, data: LazyFrame) -> LazyFrame:
         return data.with_columns(
-            pl.col("postal_code").str.strip_chars().str.replace_all("[^A-Za-z0-9]", "")
+            pl.col("zipcode")
+            .str.strip_chars()
+            .str.replace_all("[^0-9 .]", "")
+            .cast(pl.Float32)
+            .cast(pl.Int32)
+            .alias("zipcode")
+        )
+
+    def _clean_gender(self, data: LazyFrame) -> LazyFrame:
+        return data.with_columns(
+            pl.col("gender").str.strip_chars().str.to_lowercase().alias("gender")
         )
