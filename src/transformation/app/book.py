@@ -41,10 +41,10 @@ class TransformationBookApp(TransformationApp):
         data = data.unique(pl.col("id"))
 
         data = self.clean_and_titlecase(data, "title")
-        data = self._extract_from_list(data, "authors")
+        data = self.extract_from_list(data, "authors")
         data = self.clean_and_titlecase(data, "publisher")
+        data = self.extract_from_list(data, "categories")
         data = self._add_published_year(data)
-        data = self._extract_from_list(data, "categories")
         data = self._clean_prices(data)
         data = self._clean_pages(data)
 
@@ -69,7 +69,7 @@ class TransformationBookApp(TransformationApp):
 
         return data
 
-    def _extract_from_list(self, data: LazyFrame, column_name: str) -> LazyFrame:
+    def extract_from_list(self, data: LazyFrame, column_name: str) -> LazyFrame:
         return data.with_columns(
             pl.col(column_name)
             .str.extract("'([^,]*)'")

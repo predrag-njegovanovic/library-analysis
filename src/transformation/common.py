@@ -58,3 +58,11 @@ class TransformationApp(App):
             .str.to_date(format="%Y-%m-%d", strict=False)
             .alias(column_name)
         )
+
+    def extract_from_list(self, data: LazyFrame, column_name: str) -> LazyFrame:
+        return data.with_columns(
+            pl.col(column_name)
+            .str.extract("'([^,]*)'")
+            .cast(pl.List(pl.String))
+            .alias(column_name)
+        )
