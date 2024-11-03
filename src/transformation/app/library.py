@@ -27,6 +27,7 @@ class TransformationLibraryApp(TransformationApp):
         if start_date and end_date:
             data = self.filter(data, start_date, end_date, "ingestion_date")
 
+        logger.info("Applying transformations.")
         data = self.transform(data)
         data = self.set_schema(data)
 
@@ -44,7 +45,10 @@ class TransformationLibraryApp(TransformationApp):
         data = self._clean_and_titlecase(data, "street_address")
         data = self._titlecase(data, "city")
         data = self._uppercase(data, "region")
-        data = self._clean_region(data)
+        data = self._clean_postal_code(data)
+
+        # drop ingestion column
+        data = data.drop(pl.col("ingestion_date"))
 
         return data
 
@@ -55,7 +59,7 @@ class TransformationLibraryApp(TransformationApp):
             "street_address": pl.String,
             "city": pl.String,
             "region": pl.String,
-            "postal_code": pl.Int8,
+            "postal_code": pl.String,
         }
 
         data = data.cast(dtypes=library_schema)
@@ -65,12 +69,12 @@ class TransformationLibraryApp(TransformationApp):
     def _clean_and_titlecase(self, data: LazyFrame, column_name: str) -> LazyFrame:
         return data.with_columns(
             pl.col(column_name)
+            .str.strip_chars()
             .str.split(" ")
-            .list.eval(
-                pl.element().str.strip_chars(),
-                pl.element().str.to_lowercase(),
-                pl.element().str.to_titlecase(),
-            )
+            .list.eval(pl.element().str.strip_chars())
+            .list.eval(pl.element().filter(pl.element() != ""))
+            .list.eval(pl.element().str.to_lowercase())
+            .list.eval(pl.element().str.to_titlecase())
             .list.join(" ")
             .alias(column_name)
         )
@@ -89,7 +93,7 @@ class TransformationLibraryApp(TransformationApp):
             pl.col(column_name).str.strip_chars().str.to_uppercase().alias(column_name)
         )
 
-    def _clean_region(self, data: LazyFrame) -> LazyFrame:
+    def _clean_postal_code(self, data: LazyFrame) -> LazyFrame:
         return data.with_columns(
-            pl.col("region").str.strip_chars().str.replace_all("[^A-Za-z0-9]", "")
+            pl.col("postal_code").str.strip_chars().str.replace_all("[^A-Za-z0-9]", "")
         )
