@@ -53,7 +53,7 @@ def init_writer(config_module: Config | None) -> Writer | None:
 
 class Reader(ABC):
     @abstractmethod
-    def read(self, config: Config, *args, **kwargs) -> DataFrame | LazyFrame:
+    def read(self, config: Config, *args, **kwargs) -> LazyFrame:
         pass
 
 
@@ -80,7 +80,7 @@ class App(ABC):
     def run(self) -> None:
         pass
 
-    def read(self, config: Config, *args, **kwargs) -> DataFrame | LazyFrame:
+    def read(self, config: Config, *args, **kwargs) -> LazyFrame:
         return self.reader.read(config, *args, **kwargs)
 
     def write(self, data: DataFrame, config: Config, *args, **kwargs) -> None:
@@ -89,8 +89,8 @@ class App(ABC):
 
 # Readers
 class CsvReader(Reader):
-    def read(self, config: Config, *args, **kwargs) -> DataFrame:
-        return pl.read_csv(source=config.path, has_header=True)
+    def read(self, config: Config, *args, **kwargs) -> LazyFrame:
+        return pl.scan_csv(source=config.path, has_header=True)
 
 
 class ParquetReader(Reader):
