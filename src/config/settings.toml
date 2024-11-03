@@ -50,3 +50,51 @@ writer = "ParquetWriter"
     [ingestion.library.output]
     path = "@format {this.root.bronze}/libraries"
     partition_by = ["ingestion_date"]
+
+[transformation]
+reader = "ParquetReader"
+writer = "ParquetWriter"
+
+    [transformation.book]
+    reader = "@format {this.transformation.reader}"
+    writer = "@format {this.transformation.writer}"
+
+    [transformation.book.input]
+    path = "@format {this.root.bronze}/books"
+
+    [transformation.book.output]
+    path = "@format {this.root.silver}/books.parquet"
+    partition_by = []
+
+    [transformation.customer]
+    reader = "@format {this.transformation.reader}"
+    writer = "@format {this.transformation.writer}"
+
+    [transformation.customer.input]
+    path = "@format {this.root.bronze}/customers"
+
+    [transformation.customer.output]
+    path = "@format {this.root.silver}/customers.parquet"
+    partition_by = []
+
+    [transformation.checkout]
+    reader = "@format {this.transformation.reader}"
+    writer = "@format {this.transformation.writer}"
+
+    [transformation.checkout.input]
+    path = "@format {this.root.bronze}/checkouts"
+
+    [transformation.checkout.output]
+    path = "@format {this.root.silver}/checkouts.parquet"
+    partition_by = []
+
+    [transformation.library]
+    reader = "@format {this.transformation.reader}"
+    writer = "@format {this.transformation.writer}"
+
+    [transformation.library.input]
+    path = "@format {this.root.bronze}/libraries"
+
+    [transformation.library.output]
+    path = "@format {this.root.silver}/libraries.parquet"
+    partition_by = []
