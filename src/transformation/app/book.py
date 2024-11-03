@@ -82,7 +82,8 @@ class TransformationBookApp(TransformationApp):
             pl.col("published_date")
             .str.strip_chars()
             .str.replace_all("[^0-9 -]", "")
-            .str.to_date(format="%Y", strict=False)
+            .str.extract("(\\w{4})")
+            .str.to_date(format="%Y", strict=True)
             .dt.year()
             .alias("published_year")
         )
@@ -93,7 +94,7 @@ class TransformationBookApp(TransformationApp):
             .str.strip_chars()
             .str.replace_all("[^0-9 .]", "")
             .cast(pl.Float32)
-            .round(2)
+            .ceil()
             .alias("price")
         )
 

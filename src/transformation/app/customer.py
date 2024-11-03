@@ -44,7 +44,7 @@ class TransformationCustomerApp(TransformationApp):
         data = self.clean_and_titlecase(data, "name")
         data = self.clean_and_titlecase(data, "street_address")
         data = self.titlecase(data, "city")
-        data = self.uppercase(data, "state")
+        data = self.titlecase(data, "state")
         data = self._clean_zipcode(data)
         data = self.clean_dates(data, "birth_date")
         data = self._clean_gender(data)
