@@ -5,6 +5,7 @@ import click
 
 from src.command.utils import DEFAULT_CONFIG_PATH, load_app, set_root_data_dir
 from src.common import Config
+from src.exception import DataProcessingException
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +29,10 @@ def create_dataset(config_path: Path):
 
     dataset_app = load_app(config, "aggregation.dataset", "src.aggregation.DatasetApp")
 
-    # TODO: Add exception handling and graceful shutdown
-    dataset_app.run()
+    try:
+        dataset_app.run()
+    except Exception as error:
+        logger.error(error)
+        raise DataProcessingException(app_name="src.aggregation.DatasetApp") from error
 
     logger.info("Finished process of creating dataset.")
