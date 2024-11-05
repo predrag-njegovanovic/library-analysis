@@ -28,6 +28,7 @@ def create_dataset(config_path: Path):
 
     dataset_app = load_app(config, "aggregation.dataset", "src.aggregation.DatasetApp")
 
+    # TODO: Add exception handling and graceful shutdown
     dataset_app.run()
 
     logger.info("Finished process of creating dataset.")

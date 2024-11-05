@@ -17,19 +17,19 @@ class DatasetApp(AggregationApp):
     def run(self) -> None:
         logger.info("Reading data from silver layer.")
 
-        books_df = self.read(self.config.book.path)
-        customers_df = self.read(self.config.customer.path)
-        checkouts_df = self.read(self.config.checkout.path)
+        books_df = self.read(self.config.input.book)
+        customers_df = self.read(self.config.input.customer)
+        checkouts_df = self.read(self.config.input.checkout)
 
         logger.info("All tables loaded.")
+
+        customers_df = self._add_age_category(customers_df)
 
         # preparing data for aggregation
         books_df = self.fill_nulls(books_df, "price", pl.col("price").median(), "price")
         customers_df = self.fill_nulls(
             customers_df, "age", pl.col("age").median(), "age"
         )
-
-        customers_df = self._add_age_category(customers_df)
 
         # only applicable to checkouts table
         checkouts_df = self._add_label(checkouts_df)
@@ -53,6 +53,9 @@ class DatasetApp(AggregationApp):
 
         data = data.drop_nulls()
 
+        # Filter out invalid labels
+        data = data.filter(pl.col("label") != -1)
+
         # change to categorical to physical representation
         data = self._transform_categorical_columns(data, "gender", "gender")
         data = self._transform_categorical_columns(data, "occupation", "occupation")
@@ -72,13 +75,13 @@ class DatasetApp(AggregationApp):
             "customer_id": pl.String,
             "book_id": pl.String,
             "name": pl.String,
-            "gender": pl.Int32,
-            "education": pl.Int32,
-            "occupation": pl.Int32,
-            "age_category": pl.Int32,
+            "gender": pl.UInt32,
+            "education": pl.UInt32,
+            "occupation": pl.UInt32,
+            "age_category": pl.UInt32,
             "price_standardized": pl.Float32,
             "pages_standardized": pl.Float32,
-            "label": pl.Int32,
+            "label": pl.UInt32,
         }
 
         data = data.cast(dtypes=dataset_schema)
