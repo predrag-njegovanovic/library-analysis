@@ -98,3 +98,24 @@ writer = "ParquetWriter"
     [transformation.library.output]
     path = "@format {this.root.silver}/libraries.parquet"
     partition_by = []
+
+[aggregation]
+reader = "ParquetReader"
+writer = "ParquetWriter"
+
+    [aggregation.dataset]
+    reader = "@format {this.aggregation.reader}"
+    writer = "@format {this.aggregation.writer}"
+
+    [aggregation.dataset.input.book]
+    path = "@format {this.root.silver}/books.parquet"
+
+    [aggregation.dataset.input.customer]
+    path = "@format {this.root.silver}/customers.parquet"
+
+    [aggregation.dataset.input.checkout]
+    path = "@format {this.root.silver}/checkouts.parquet"
+
+    [aggregation.dataset.output]
+    path = "@format {this.root.gold}/dataset.parquet"
+    partition_by = []
