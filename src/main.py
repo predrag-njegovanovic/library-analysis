@@ -4,7 +4,7 @@ import typing as t
 import click
 from click import Command
 
-from src.command import create_dataset, ingest, process
+from src.command import create_dataset, ingest, predict, process
 
 logger = logging.getLogger(__name__)
 
@@ -72,12 +72,6 @@ class MutuallyExclusiveCommandGroup(click.Group):
 
 @click.group(cls=MutuallyExclusiveCommandGroup, chain=True)
 def main():
-    pass
-
-
-@click.command()
-def predict() -> None:
-    # TODO: Predict late book return
     pass
 
 
