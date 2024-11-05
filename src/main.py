@@ -4,7 +4,7 @@ import typing as t
 import click
 from click import Command
 
-from src.command import ingest, process
+from src.command import create_dataset, ingest, process
 
 logger = logging.getLogger(__name__)
 
@@ -72,12 +72,6 @@ class MutuallyExclusiveCommandGroup(click.Group):
 
 @click.group(cls=MutuallyExclusiveCommandGroup, chain=True)
 def main():
-    pass
-
-
-@click.command()
-def create_dataset() -> None:
-    # TODO: Create dataset in the gold layer
     pass
 
 
