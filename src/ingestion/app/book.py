@@ -13,6 +13,8 @@ class IngestionBookApp(IngestionApp):
             data = self.read(self.config.input)
             transformed_data = self.transform(data)
 
+            transformed_data = transformed_data.collect()
+
             logger.info(f"Saving data on path: '{self.config.output.path}'")
             self.write(transformed_data, self.config.output)
         except Exception as error:
