@@ -1,25 +1,27 @@
 import re
 from datetime import datetime, timezone
 
-from polars import DataFrame
+from polars import LazyFrame
 
 from src.common import App
 
 
 class IngestionApp(App):
-    def transform(self, data: DataFrame) -> DataFrame:
+    def transform(self, data: LazyFrame) -> LazyFrame:
         data = self._rename_columns(data)
         data = self._add_ingestion_date_column(data)
 
         return data
 
-    def _add_ingestion_date_column(self, data: DataFrame) -> DataFrame:
+    def _add_ingestion_date_column(self, data: LazyFrame) -> LazyFrame:
         data = data.with_columns(ingestion_date=datetime.now(timezone.utc).date())
 
         return data
 
-    def _rename_columns(self, data: DataFrame) -> DataFrame:
-        columns = {column: self._to_snake_case(column) for column in data.columns}
+    def _rename_columns(self, data: LazyFrame) -> LazyFrame:
+        columns = {
+            column: self._to_snake_case(column).lower() for column in data.columns
+        }
         data = data.rename(columns)
 
         return data
