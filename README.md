@@ -31,7 +31,8 @@ $ git clone https://github.com/predrag-njegovanovic/library-analysis.git
 ```sh
 $ poetry install
 ```
-5) Inside `storage` directory create `bronze`, `silver` and `gold` folders.
+5) Inside `data/ingest` directory, place data files (*.csv files).
+6) Inside `storage` directory create `bronze`, `silver` and `gold` folders.
 
 Project is setup in a way that no additional changes should be needed for a local run. Project configuration is stored inside `src/config/settings.toml` and it's adapted for default (local) environment, but there are options for extensions.
 
@@ -81,9 +82,10 @@ lt predict --customer-id <customer_id> --book-id <book_id>
 ```
 
 Steps to reproduce results:
-1) Run `ingest` command,
-2) Run `process` command,
-3) Inspect `01_library_data_analysis` notebook,
-4) Run `create-dataset` command,
-5) Inspect `02_prediction_model_training` notebook and
-6) Try `predict` command.
+1) Make sure all .csv files are inside `ingest` directory,
+2) Run `ingest` command,
+3) Run `process` command,
+4) Inspect `01_library_data_analysis` notebook,
+5) Run `create-dataset` command,
+6) Inspect `02_prediction_model_training` notebook and
+7) Try `predict` command.
