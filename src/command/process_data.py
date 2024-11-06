@@ -37,6 +37,14 @@ logger = logging.getLogger(__name__)
 def process(
     config_path: Path, start_date: str | None = None, end_date: str | None = None
 ) -> None:
+    """Command for processing data. Reads raw data by date and saves it to clean zone.
+
+    Args:
+        config_path (Path): Path to configuration file.
+        start_date (str | None, optional): Read starting with this date. Defaults to None.
+        end_date (str | None, optional): Read till this date. Defaults to None.
+    """
+
     logger.info("Starting data processing..")
     logger.info("Setting data dir environment variable.")
     set_root_data_dir()

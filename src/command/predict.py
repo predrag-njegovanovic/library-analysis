@@ -1,5 +1,6 @@
 import logging
 import pickle
+import sys
 
 import click
 import polars as pl
@@ -14,14 +15,14 @@ from src.common import Config, init_reader
 
 logger = logging.getLogger(__name__)
 
-COLUMNS = [
+COLUMNS = (
     "gender",
     "education",
     "occupation",
     "age_category",
     "price_standardized",
     "pages_standardized",
-]
+)
 
 
 @click.command()
@@ -54,9 +55,9 @@ def predict(config_path: str, customer_id: str, book_id: str) -> None:
     Everything will be fetched from gold layer and dataset table.
 
     Args:
-        config_path (str): _description_
-        customer_id (str): _description_
-        book_id (str): _description_
+        config_path (str): Path to configuration.
+        customer_id (str): Customer to get predicted.
+        book_id (str): Book to get predicted.
     """
 
     set_root_data_dir()
@@ -77,10 +78,17 @@ def predict(config_path: str, customer_id: str, book_id: str) -> None:
 
     feature_vector = result.select(COLUMNS).to_pandas()
 
+    if len(feature_vector) == 0:
+        logger.error("Combination of customer id and book id doesn't exist.")
+        # gracefully shutdown
+        sys.exit(-1)
+
     with open(config.model.path, "rb") as model_file:
         model = pickle.load(model_file)
 
     prediction = model.predict(feature_vector)
+
+    logger.info(f"Prediction value: {prediction}.")
 
     if prediction:
         logger.info(
