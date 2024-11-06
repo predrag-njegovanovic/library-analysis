@@ -4,7 +4,7 @@ This repository represent a simplified version of data processing projects writt
 It represents combination of data science, written in notebooks, and data engineer and it should describe (through code) process of generating dataset, starting with ingestion all the way to the model training.
 
 Repository contains:
-1) **data** - local representation of [medallion architecture] (https://www.databricks.com/glossary/medallion-architecture) (bronze/silver/gold layers).
+1) **data** - local representation of [medallion architecture](https://www.databricks.com/glossary/medallion-architecture) (bronze/silver/gold layers).
 2) **model** - saved model.
 3) **notebook** - notebooks for data analysis and model training.
 4) **data processing jobs** - applications processing data using Polars.
@@ -40,9 +40,9 @@ Project is setup in a way that no additional changes should be needed for a loca
 The main application abstractions are defined in the `common.py` module and they are used for creating processing pipelines. 
 There are three pipelines which are moving data through storage layers thus making it more "usable".  
 Those three layers are:
-1) Ingestion,
-2) Transformation and
-3) Aggregation
+1) **Ingestion**,
+2) **Transformation** and
+3) **Aggregation**
 
 And applications are conceived in that way.  
 
