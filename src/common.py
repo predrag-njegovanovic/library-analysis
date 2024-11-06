@@ -52,18 +52,26 @@ def init_writer(config_module: Config | None) -> Writer | None:
 
 
 class Reader(ABC):
+    """Abstract reader class. Subclasses implement read method."""
+
     @abstractmethod
     def read(self, config: Config, *args, **kwargs) -> LazyFrame:
         pass
 
 
 class Writer(ABC):
+    """Abstract writer class. Subclasses implement write method."""
+
     @abstractmethod
     def write(self, data: DataFrame, config: Config, *args, **kwargs) -> None:
         pass
 
 
 class App(ABC):
+    """Definition of an application that is deployed and run as a job.
+    Defines configuration, reader and a writer.
+    """
+
     def __init__(
         self,
         config: Config,

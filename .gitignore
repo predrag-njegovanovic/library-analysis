@@ -173,3 +173,6 @@ cython_debug/
 /data/storage/bronze/*
 /data/storage/silver/*
 /data/storage/gold/*
+
+# model files
+/model/*.pkl

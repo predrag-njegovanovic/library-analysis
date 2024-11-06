@@ -19,6 +19,12 @@ logger = logging.getLogger(__name__)
     help="Path to configuration file.",
 )
 def ingest(config_path: Path) -> None:
+    """Command for ingesting data to the raw data layer.
+
+    Args:
+        config_path (Path): Path to configuration file.
+    """
+
     logger.info("Starting ingestion..")
     logger.info("Setting data dir environment variable.")
     set_root_data_dir()

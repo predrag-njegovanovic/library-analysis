@@ -3,6 +3,9 @@ bronze = "@format {env[ROOT_DATA_DIR]}/storage/bronze"
 silver = "@format {env[ROOT_DATA_DIR]}/storage/silver"
 gold = "@format {env[ROOT_DATA_DIR]}/storage/gold"
 
+[model]
+path = "@format {env[ROOT_MODEL_DIR]}/model.pkl"
+
 [ingestion]
 reader = "CsvReader"
 writer = "ParquetWriter"

@@ -52,4 +52,10 @@ def set_root_data_dir() -> None:
     data_dir = root_dir / "data"
 
     environ["ROOT_DATA_DIR"] = str(data_dir)
-    environ["ROOT_DATA_DIR"] = str(data_dir)
+
+
+def set_root_model_dir() -> None:
+    root_dir = Path(__file__).absolute().parent.parent.parent
+    data_dir = root_dir / "model"
+
+    environ["ROOT_MODEL_DIR"] = str(data_dir)
