@@ -36,7 +36,7 @@ remove-all-unused-imports = true
 in-place = true
 
 [tool.poetry.scripts]
-latool = "src.main:main"
+lt = "src.main:main"
 
 [build.system]
 requires = ["poetry-core"]
