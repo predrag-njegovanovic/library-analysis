@@ -1,0 +1,26 @@
+[
+    {
+        "id": "test1",
+        "title": " example Title  ",
+        "author": "['test']",
+        "publisher": "Univ of california press",
+        "published_date": " 20180609",
+        "city": "portland"
+    },
+    {
+        "id": "test2",
+        "title": "Test  ",
+        "author": "['author1']",
+        "publisher": "Lulu",
+        "published_date": "2022-02-01",
+        "city": "San francisco"
+    },
+    {
+        "id": "test3",
+        "title": "example",
+        "author": "['author']",
+        "publisher": "john willey & sons",
+        "published_date": "%2018 05 05",
+        "city": "new york"
+    }
+]

@@ -19,7 +19,9 @@ class IngestionApp(App):
         return data
 
     def _rename_columns(self, data: DataFrame) -> DataFrame:
-        columns = {column: self._to_snake_case(column) for column in data.columns}
+        columns = {
+            column: self._to_snake_case(column).lower() for column in data.columns
+        }
         data = data.rename(columns)
 
         return data
